@@ -29,6 +29,10 @@ function getRandomFloat(min, max, decimalPlaces) {
   return +fixed;
 }
 
+function createMocks(length) {
+  return Array.from({length: length}, () => createMock());
+}
+
 function createMock() {
   const location = createLocation();
   return {
@@ -67,7 +71,7 @@ function getRandomArray(sourceItems) {
   const result = [];
   const items = sourceItems.slice();
   for(let i = 0; i < length; i++) {
-    const randomIndex = getRandomInteger(0, items.length - 1);
+    const randomIndex = items.length === 1 ? 0 : getRandomInteger(0, items.length - 1);
     const randomItem = items[randomIndex];
     result.push(randomItem);
     items.splice(randomIndex, 1);
@@ -82,4 +86,4 @@ function createLocation() {
   };
 }
 
-console.log(createMock());
+console.log(createMocks(10));
