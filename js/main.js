@@ -69,14 +69,10 @@ function createOffer(location) {
 function getRandomArray(sourceItems) {
   const length = getRandomInteger(1, sourceItems.length);
   const result = [];
-  const items = sourceItems.slice();
   for(let i = 0; i < length; i++) {
-    const randomIndex = items.length === 1 ? 0 : getRandomInteger(0, items.length - 1);
-    const randomItem = items[randomIndex];
-    result.push(randomItem);
-    items.splice(randomIndex, 1);
+    result.push(sourceItems[getRandomInteger(0, sourceItems - 1)]);
   }
-  return result;
+  return [...new Set(result)];
 }
 
 function createLocation() {
