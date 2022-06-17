@@ -38,12 +38,12 @@ function createMock() {
   return {
     author: createAuthor(),
     offer: createOffer(location),
-    location: location
+    location
   };
 }
 
 function createAuthor() {
-  return `img/avatars/user${zeroPad(getRandomInteger(1, 10))}.png`;
+  return `img/avatars/user${zeroPad(getRandomInteger(1, 10), 2)}.png`;
 }
 
 function zeroPad(num, places) {
