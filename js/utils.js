@@ -22,7 +22,7 @@ function getRandomArray(sourceItems) {
   const length = getRandomInteger(1, sourceItems.length);
   const result = [];
   for(let i = 0; i < length; i++) {
-    result.push(sourceItems[getRandomInteger(0, sourceItems - 1)]);
+    result.push(sourceItems[getRandomInteger(0, sourceItems.length - 1)]);
   }
   return [...new Set(result)];
 }

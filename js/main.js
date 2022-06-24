@@ -1,4 +1,6 @@
-import { createMocks } from './data.js';
+import {generateHostingDomElements} from './html-generator.js';
 
 
-console.log(createMocks(10));
+const hostingsElements = generateHostingDomElements(5);
+const mapCanvas = document.querySelector('#map-canvas');
+mapCanvas.append(hostingsElements[0]);
