@@ -48,4 +48,4 @@ function createLocation() {
   };
 }
 
-export { createHostings as createMocks };
+export { createHostings };

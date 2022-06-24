@@ -1,4 +1,4 @@
-import { createMocks as createHostings } from './data.js';
+import { createHostings } from './data.js';
 import { OFFER_TYPE_LABELS } from './constants.js';
 
 function generateHostingDomElements(count) {
@@ -9,18 +9,23 @@ function generateHostingDomElements(count) {
 
   return hostings.map((hosting) => {
     const template = hostingTemplate.cloneNode(true);
-    template.querySelector('.popup__title').textContent = hosting.offer.title;
-    template.querySelector('.popup__text--address').textContent = hosting.offer.address;
-    template.querySelector('.popup__text--price').textContent = `${hosting.offer.price} ₽/ночь`;
-    template.querySelector('.popup__type').textContent = OFFER_TYPE_LABELS[hosting.offer.type];
-    template.querySelector('.popup__text--capacity').textContent = `${hosting.offer.rooms} комнаты для ${hosting.offer.guests} гостей`;
-    template.querySelector('.popup__text--time').textContent = `Заезд после ${hosting.offer.checkin}, выезд до ${hosting.offer.checkout}`;
-    template.querySelector('.popup__avatar').src = hosting.author.avatar;
-    template.querySelector('.popup__description').textContent = hosting.offer.description;
+    addTextContent(template, '.popup__title', hosting.offer.title);
+    addTextContent(template, '.popup__text--address', hosting.offer.address);
+    addTextContent(template, '.popup__text--price', `${hosting.offer.price} ₽/ночь`);
+    addTextContent(template, '.popup__type', OFFER_TYPE_LABELS[hosting.offer.type]);
+    addTextContent(template, '.popup__text--capacity', `${hosting.offer.rooms} комнаты для ${hosting.offer.guests} гостей`);
+    addTextContent(template, '.popup__text--time', `Заезд после ${hosting.offer.checkin}, выезд до ${hosting.offer.checkout}`);
+    addTextContent(template, '.popup__avatar',  hosting.author.avatar);
+    addTextContent(template, '.popup__description', hosting.offer.description);
+
     fillFeatures(template, hosting);
     fillPhotos(template, hosting);
     return template;
   });
+}
+
+function addTextContent(template, selector, textContent) {
+  template.querySelector(selector).textContent = textContent;
 }
 
 function fillPhotos(template, hosting) {
