@@ -26,7 +26,7 @@ function enableElements(elements) {
 }
 
 function disableElements(elements) {
-  elements.forEach((element) =>element.setAttribute('disabled', 'disabled'));
+  elements.forEach((element) =>element.setAttribute('disabled', true));
 }
 
 export { toggleActive };
