@@ -19,4 +19,13 @@ const OFFER_TYPE_LABELS = {
   'hotel': 'Отель'
 };
 
-export { CONSTANTS, OFFER_TYPE_LABELS };
+const MIN_PRICES_BY_TYPE = new Map([
+  ['bungalow', 0],
+  ['flat', 1000],
+  ['hotel', 3000],
+  ['house', 5000],
+  ['palace', 10000]
+]);
+
+
+export { CONSTANTS, OFFER_TYPE_LABELS, MIN_PRICES_BY_TYPE };

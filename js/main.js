@@ -1,4 +1,4 @@
-import { toggleActive } from './form.js';
+import { validateForm } from './validation.js';
 
-toggleActive(false);
-toggleActive(true);
+validateForm();
+
