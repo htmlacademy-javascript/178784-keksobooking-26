@@ -9,6 +9,7 @@ const pristine = new Pristine(form, {
 function setupFormValidation() {
   setupPriceValidation();
   setupCapacityValidation();
+  setupTimeInOutAccording();
 
   form.addEventListener('submit', (evt) => {
     evt.preventDefault();
@@ -43,6 +44,18 @@ function setupCapacityValidation() {
 
   roomsCountElement.addEventListener('change', (evt) => {
     updateEnableCapacitiesByRoomCounts(evt.target.value);
+  });
+}
+
+const timeInElement = form.querySelector('#timein');
+const timeOutElement = form.querySelector('#timeout');
+function setupTimeInOutAccording() {
+  form.querySelector('.ad-form__element--time').addEventListener('change', (evt) => {
+    if (evt.target.id === timeInElement.id) {
+      timeOutElement.value = evt.target.value;
+    } else if (evt.target.id === timeOutElement.id) {
+      timeInElement.value = evt.target.value;
+    }
   });
 }
 
