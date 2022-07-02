@@ -1,4 +1,4 @@
-import { validateForm } from './validation.js';
+import { setupFormValidation } from './validation.js';
 
-validateForm();
+setupFormValidation();
 
