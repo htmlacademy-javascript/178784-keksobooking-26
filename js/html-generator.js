@@ -1,31 +1,32 @@
-import { createHostings } from './data.js';
-import { OFFER_TYPE_LABELS } from './constants.js';
+import { OFFER_TYPE_LABELS, ROOMS_LABELS, CAPACITY_LABELS } from './constants.js';
 
-function generateHostingDomElements(count) {
-  const hostings = createHostings(count);
+function createHostingPopup(popupTemplate, hosting) {
+  const template = popupTemplate.cloneNode(true);
+  template.querySelector('.popup__avatar').src = hosting.author.avatar;
+  addTextOrRemoveEmpty(template, '.popup__title', hosting.offer.title);
+  addTextOrRemoveEmpty(template, '.popup__text--address', hosting.offer.address);
+  addTextOrRemoveEmpty(template, '.popup__text--price', hosting.offer.price ? `${hosting.offer.price} ₽/ночь` : null);
+  addTextOrRemoveEmpty(template, '.popup__type', hosting.offer.type ? OFFER_TYPE_LABELS[hosting.offer.type] : null);
+  addTextOrRemoveEmpty(template, '.popup__text--capacity', hosting.offer.rooms && hosting.offer.capacity
+    ? `${ROOMS_LABELS[hosting.offer.rooms]} ${CAPACITY_LABELS[hosting.offer.capacity]}`
+    : null);
+  addTextOrRemoveEmpty(template, '.popup__text--time', hosting.offer.checkin && hosting.offer.checkout
+    ? `Заезд после ${hosting.offer.checkin}, выезд до ${hosting.offer.checkout}`
+    : null);
+  addTextOrRemoveEmpty(template, '.popup__description', hosting.offer.description);
 
-  const hostingTemplate = document.querySelector('#card').content
-    .querySelector('.popup');
-
-  return hostings.map((hosting) => {
-    const template = hostingTemplate.cloneNode(true);
-    addTextContent(template, '.popup__title', hosting.offer.title);
-    addTextContent(template, '.popup__text--address', hosting.offer.address);
-    addTextContent(template, '.popup__text--price', `${hosting.offer.price} ₽/ночь`);
-    addTextContent(template, '.popup__type', OFFER_TYPE_LABELS[hosting.offer.type]);
-    addTextContent(template, '.popup__text--capacity', `${hosting.offer.rooms} комнаты для ${hosting.offer.guests} гостей`);
-    addTextContent(template, '.popup__text--time', `Заезд после ${hosting.offer.checkin}, выезд до ${hosting.offer.checkout}`);
-    addTextContent(template, '.popup__avatar',  hosting.author.avatar);
-    addTextContent(template, '.popup__description', hosting.offer.description);
-
-    fillFeatures(template, hosting);
-    fillPhotos(template, hosting);
-    return template;
-  });
+  fillFeatures(template, hosting);
+  fillPhotos(template, hosting);
+  return template;
 }
 
-function addTextContent(template, selector, textContent) {
-  template.querySelector(selector).textContent = textContent;
+function addTextOrRemoveEmpty(template, selector, textContent) {
+  const targetElement = template.querySelector(selector);
+  if (textContent) {
+    targetElement.textContent = textContent;
+  } else {
+    targetElement.remove();
+  }
 }
 
 function fillPhotos(template, hosting) {
@@ -50,4 +51,4 @@ function fillFeatures(template, hosting) {
     });
 }
 
-export { generateHostingDomElements };
+export { createHostingPopup };
