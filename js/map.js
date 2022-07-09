@@ -8,6 +8,7 @@ const popupTemplate = document.querySelector('#card').content
   .querySelector('.popup');
 const hostings = createHostings(10);
 let map;
+let markerGroup;
 
 function initMap() {
   map = L.map('map-canvas')
@@ -17,6 +18,7 @@ function initMap() {
     })
     .setView(CONSTANTS.TOKYO_CENTER, 10);
 
+  markerGroup = L.layerGroup().addTo(map);
   addMainPin();
   addHostingPins();
 
@@ -66,7 +68,8 @@ function addHostingPin(hosting) {
     icon: hostingPinIcon
   });
 
-  mainPinMarker.addTo(map)
+  mainPinMarker
+    .addTo(markerGroup)
     .bindPopup(createHostingPopup(popupTemplate, hosting));
 }
 
