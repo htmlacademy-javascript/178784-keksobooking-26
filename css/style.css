@@ -837,6 +837,10 @@ fieldset {
   margin: 0 0 10px 0 !important;
 }
 
+#price {
+  margin-bottom: 10px;
+}
+
 .popup__text--price {
   font-size: 22px;
   font-weight: 700;
