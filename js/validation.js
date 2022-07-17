@@ -13,7 +13,7 @@ const pristine = new Pristine(form, {
 function setupFormValidation() {
   setupPriceValidation();
   setupCapacityValidation();
-  setupTimeInOutAccording();
+  return pristine;
 }
 
 function validateForm() {
@@ -33,39 +33,14 @@ function setupPriceValidation() {
 }
 
 const capacitySelect = form.querySelector('#capacity');
-
+const roomsCountElement = form.querySelector('#room_number');
 function setupCapacityValidation() {
-  const roomsCountElement = form.querySelector('#room_number');
   pristine.addValidator(capacitySelect, (value) => {
     if (constants.CAPACITIES_BY_ROOMS.get(roomsCountElement.value).has(value)) {
       return true;
     }
     return false;
   }, 'Недоступное для выбора значение');
-
-  updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
-
-  roomsCountElement.addEventListener('change', (evt) => {
-    updateEnableCapacitiesByRoomCounts(evt.target.value);
-  });
-}
-
-const timeInElement = form.querySelector('#timein');
-const timeOutElement = form.querySelector('#timeout');
-function setupTimeInOutAccording() {
-  form.querySelector('.ad-form__element--time').addEventListener('change', (evt) => {
-    if (evt.target.id === timeInElement.id) {
-      timeOutElement.value = evt.target.value;
-    } else if (evt.target.id === timeOutElement.id) {
-      timeInElement.value = evt.target.value;
-    }
-  });
-}
-
-function updateEnableCapacitiesByRoomCounts(roomsCount) {
-  capacitySelect.querySelectorAll('option').forEach((option) => {
-    option.disabled = !constants.CAPACITIES_BY_ROOMS.get(roomsCount).has(option.value);
-  });
 }
 
 export { setupFormValidation, validateForm };

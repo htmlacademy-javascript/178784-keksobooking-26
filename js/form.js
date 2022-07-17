@@ -1,5 +1,4 @@
 import { constants } from './constants.js';
-import { setupFormValidation, validateForm } from './validation.js';
 import { enableElement, disableElement, enableElements, disableElements } from './utils.js';
 
 const priceSliderElement = document.querySelector('.ad-form__slider');
@@ -7,35 +6,35 @@ const priceElement = document.querySelector('#price');
 const hostingTypeElement = document.querySelector('.ad-form').querySelector('#type');
 const form = document.querySelector('.ad-form');
 
-
 function initForm() {
+  initCapacity();
+  initTimeInOutAccording();
   initPriceSlider();
-  setupFormValidation();
-  initSubmit();
 }
 
-function initSubmit() {
-  form.addEventListener('submit', (evt) => {
-    evt.preventDefault();
-    if (validateForm()) {
-      alert('форма валидна');
-    }
-    else {
-      alert('форма не валидна');
-    }
+const roomsCountElement = form.querySelector('#room_number');
+function initCapacity() {
+  updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
+  roomsCountElement.addEventListener('change', (evt) => {
+    updateEnableCapacitiesByRoomCounts(evt.target.value);
   });
+
+}
+
+function resetForm() {
+  form.reset();
+  updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
+  initPriceByHosting();
 }
 
 function initPriceSlider() {
-  const startMinPrice = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
-  priceElement.value = startMinPrice;
-
+  const priceValue = initPriceByHosting();
   noUiSlider.create(priceSliderElement, {
-    start: startMinPrice,
+    start: priceValue,
     step: 100,
     connect: 'lower',
     range: {
-      'min': startMinPrice,
+      'min': priceValue,
       'max': constants.MAX_PRICE
     },
     format: {
@@ -64,12 +63,18 @@ function initPriceSlider() {
   });
 }
 
+function initPriceByHosting() {
+  const priceValue = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  priceElement.value = priceValue;
+  return priceValue;
+}
+
 function onHostingTypeChanged() {
   const newMinPrice = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
   const updateSliderOptions = {
     range: {
       'min': newMinPrice,
-      'max': constants.CONSTANTS.MAX_PRICE
+      'max': constants.MAX_PRICE
     }
   };
   const needUpdateValue = priceElement.value < newMinPrice;
@@ -106,5 +111,37 @@ function toggleActive(isActive) {
   }
 }
 
+const capacitySelect = form.querySelector('#capacity');
+function updateEnableCapacitiesByRoomCounts(roomsCount) {
+  let selectedDisabledOption = null;
+  let firstEnebleOption = null;
+  capacitySelect.querySelectorAll('option').forEach((option) => {
+    option.disabled = !constants.CAPACITIES_BY_ROOMS.get(roomsCount).has(option.value);
+    if (!selectedDisabledOption && option.selected && option.disabled) {
+      selectedDisabledOption = option;
+    }
+    if (!firstEnebleOption && !option.disabled) {
+      firstEnebleOption = option;
+    }
+  });
 
-export { toggleActive, initForm };
+  if (selectedDisabledOption && firstEnebleOption) {
+    selectedDisabledOption.selected = false;
+    firstEnebleOption.selected = true;
+  }
+}
+
+const timeInElement = form.querySelector('#timein');
+const timeOutElement = form.querySelector('#timeout');
+function initTimeInOutAccording() {
+  form.querySelector('.ad-form__element--time').addEventListener('change', (evt) => {
+    if (evt.target.id === timeInElement.id) {
+      timeOutElement.value = evt.target.value;
+    } else if (evt.target.id === timeOutElement.id) {
+      timeInElement.value = evt.target.value;
+    }
+  });
+}
+
+
+export { toggleActive, initForm, resetForm };

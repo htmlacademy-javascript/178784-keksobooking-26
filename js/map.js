@@ -1,26 +1,33 @@
 import { constants } from './constants.js';
 import { toggleActive } from './form.js';
-import { createHostings } from './data.js';
+import { getHostingsAsnc } from './data.js';
 import { createHostingPopup } from './html-generator.js';
+import { showErrorAlert } from './utils.js';
 
 const addressElement = document.querySelector('#address');
 const popupTemplate = document.querySelector('#card').content
   .querySelector('.popup');
-const hostings = createHostings(10);
 let map;
+let mainPinMarker;
 let markerGroup;
 
 function initMap() {
   map = L.map('map-canvas')
-    .on('load', () => {
+    .on('load', async () => {
       toggleActive(true);
-      setCoords(addressElement, constants.TOKYO_CENTER);
+      setAddressCoords(constants.TOKYO_CENTER);
+      try {
+        const hostings = await getHostingsAsnc();
+        addHostingPins(hostings);
+      }
+      catch(ex) {
+        showErrorAlert('Не удалось получить данные, пожалуйста, повторите поптыку позже');
+      }
     })
     .setView(constants.TOKYO_CENTER, 10);
 
   markerGroup = L.layerGroup().addTo(map);
   addMainPin();
-  addHostingPins();
 
   L.tileLayer(
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -37,7 +44,7 @@ function addMainPin() {
     iconAncor: [26, 52]
   });
 
-  const mainPinMarker = L.marker(constants.TOKYO_CENTER, {
+  mainPinMarker = L.marker(constants.TOKYO_CENTER, {
     draggable: true,
     icon: mainPinIcon
   });
@@ -45,15 +52,11 @@ function addMainPin() {
   mainPinMarker.addTo(map);
 
   mainPinMarker.on('moveend', (evt) => {
-    setCoords(addressElement, evt.target.getLatLng());
+    setAddressCoords(evt.target.getLatLng());
   });
 }
 
-function setCoords(inputElement, coords) {
-  inputElement.value = `${coords.lat.toFixed(constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(constants.COORDS_FRICTION_DIGITS)}`;
-}
-
-function addHostingPins() {
+function addHostingPins(hostings) {
   hostings.forEach((hosting) => addHostingPin(hosting));
 }
 
@@ -64,14 +67,28 @@ function addHostingPin(hosting) {
     iconAncor: [20, 40]
   });
 
-  const mainPinMarker = L.marker(hosting.location, {
+  const hostingPinMarker = L.marker(hosting.location, {
     icon: hostingPinIcon
   });
 
-  mainPinMarker
+  hostingPinMarker
     .addTo(markerGroup)
     .bindPopup(createHostingPopup(popupTemplate, hosting));
 }
 
-export { initMap };
+function setAddressCoords(coords) {
+  addressElement.value = `${coords.lat.toFixed(constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(constants.COORDS_FRICTION_DIGITS)}`;
+}
+
+function resetMap() {
+  resetMainPin();
+  map.closePopup();
+}
+
+function resetMainPin() {
+  mainPinMarker.setLatLng(constants.TOKYO_CENTER);
+  setAddressCoords(constants.TOKYO_CENTER);
+}
+
+export { initMap, resetMap };
 

@@ -87,6 +87,8 @@ fieldset {
   width: 100%;
   height: 500px;
   background-color: #dddddd;
+  position: relative;
+  z-index: 0;
 }
 
 
@@ -1041,5 +1043,21 @@ fieldset {
 }
 
 .text-error {
+  color: #ff5635;
+}
+
+.alert {
+  width: 400px;
+  padding: 20px;
+  border-radius: 5px;
+  position: fixed;
+  z-index: 2;
+  top: 20px;
+  right: 20px;
+  background-color: #ffffff;
+}
+
+.alert--error {
+  border: 2px solid #ff5635;
   color: #ff5635;
 }

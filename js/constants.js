@@ -42,7 +42,10 @@ const constants = {
     ['2', new Set(['1', '2'])],
     ['3', new Set(['1', '2', '3'])],
     ['100', new Set(['0'])]
-  ])
+  ]),
+  HIDDEN_CLASS: 'visually-hidden',
+  ERROR_MESSAGE_BLOCK_ID: 'error',
+  SUCCESS_MESSAGE_BLOCK_ID: 'success',
 };
 
 
