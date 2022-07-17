@@ -27,4 +27,22 @@ function getRandomArray(sourceItems) {
   return [...new Set(result)];
 }
 
-export { getRandomInteger, getRandomFloat, getRandomArray };
+function enableElement(element) {
+  element.removeAttribute('disabled');
+}
+
+function disableElement(element) {
+  element.setAttribute('disabled', true);
+}
+
+function enableElements(elements) {
+  elements.forEach((element) => element.removeAttribute('disabled'));
+}
+
+function disableElements(elements) {
+  elements.forEach((element) => element.setAttribute('disabled', true));
+}
+
+
+export { getRandomInteger, getRandomFloat, getRandomArray,
+  enableElement, disableElement, enableElements, disableElements };

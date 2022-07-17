@@ -1,4 +1,4 @@
-import { CONSTANTS } from './constants.js';
+import { constants } from './constants.js';
 import { toggleActive } from './form.js';
 import { createHostings } from './data.js';
 import { createHostingPopup } from './html-generator.js';
@@ -14,9 +14,9 @@ function initMap() {
   map = L.map('map-canvas')
     .on('load', () => {
       toggleActive(true);
-      setCoords(addressElement, CONSTANTS.TOKYO_CENTER);
+      setCoords(addressElement, constants.TOKYO_CENTER);
     })
-    .setView(CONSTANTS.TOKYO_CENTER, 10);
+    .setView(constants.TOKYO_CENTER, 10);
 
   markerGroup = L.layerGroup().addTo(map);
   addMainPin();
@@ -37,7 +37,7 @@ function addMainPin() {
     iconAncor: [26, 52]
   });
 
-  const mainPinMarker = L.marker(CONSTANTS.TOKYO_CENTER, {
+  const mainPinMarker = L.marker(constants.TOKYO_CENTER, {
     draggable: true,
     icon: mainPinIcon
   });
@@ -50,7 +50,7 @@ function addMainPin() {
 }
 
 function setCoords(inputElement, coords) {
-  inputElement.value = `${coords.lat.toFixed(CONSTANTS.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(CONSTANTS.COORDS_FRICTION_DIGITS)}`;
+  inputElement.value = `${coords.lat.toFixed(constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(constants.COORDS_FRICTION_DIGITS)}`;
 }
 
 function addHostingPins() {

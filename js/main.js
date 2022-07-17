@@ -1,12 +1,9 @@
 
-import { setupFormValidation } from './validation.js';
-import { toggleActive, initPriceSlider } from './form.js';
+import { toggleActive, initForm } from './form.js';
 import { initMap } from './map.js';
 
-
 toggleActive(false);
-initPriceSlider();
-setupFormValidation();
+initForm();
 initMap();
 
 

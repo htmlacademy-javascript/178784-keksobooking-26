@@ -1,11 +1,33 @@
-import { CONSTANTS, MIN_PRICES_BY_TYPE } from './constants.js';
+import { constants } from './constants.js';
+import { setupFormValidation, validateForm } from './validation.js';
+import { enableElement, disableElement, enableElements, disableElements } from './utils.js';
 
 const priceSliderElement = document.querySelector('.ad-form__slider');
 const priceElement = document.querySelector('#price');
 const hostingTypeElement = document.querySelector('.ad-form').querySelector('#type');
+const form = document.querySelector('.ad-form');
+
+
+function initForm() {
+  initPriceSlider();
+  setupFormValidation();
+  initSubmit();
+}
+
+function initSubmit() {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    if (validateForm()) {
+      alert('форма валидна');
+    }
+    else {
+      alert('форма не валидна');
+    }
+  });
+}
 
 function initPriceSlider() {
-  const startMinPrice = MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  const startMinPrice = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
   priceElement.value = startMinPrice;
 
   noUiSlider.create(priceSliderElement, {
@@ -14,7 +36,7 @@ function initPriceSlider() {
     connect: 'lower',
     range: {
       'min': startMinPrice,
-      'max': CONSTANTS.MAX_PRICE
+      'max': constants.MAX_PRICE
     },
     format: {
       to: function (value) {
@@ -43,11 +65,11 @@ function initPriceSlider() {
 }
 
 function onHostingTypeChanged() {
-  const newMinPrice = MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  const newMinPrice = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
   const updateSliderOptions = {
     range: {
       'min': newMinPrice,
-      'max': CONSTANTS.MAX_PRICE
+      'max': constants.CONSTANTS.MAX_PRICE
     }
   };
   const needUpdateValue = priceElement.value < newMinPrice;
@@ -84,20 +106,5 @@ function toggleActive(isActive) {
   }
 }
 
-function enableElement(element) {
-  element.removeAttribute('disabled');
-}
 
-function disableElement(element) {
-  element.setAttribute('disabled', true);
-}
-
-function enableElements(elements) {
-  elements.forEach((element) => element.removeAttribute('disabled'));
-}
-
-function disableElements(elements) {
-  elements.forEach((element) => element.setAttribute('disabled', true));
-}
-
-export { toggleActive, initPriceSlider };
+export { toggleActive, initForm };

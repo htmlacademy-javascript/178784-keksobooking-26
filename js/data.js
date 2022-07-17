@@ -1,5 +1,5 @@
 import { getRandomInteger, getRandomFloat, getRandomArray } from './utils.js';
-import { CONSTANTS } from './constants.js';
+import { constants } from './constants.js';
 
 
 function createHostings(length) {
@@ -29,15 +29,15 @@ function createOffer(location) {
   return {
     title: `title${getRandomInteger(1, 10)}`,
     address: `${location.lat}, ${location.lng}`,
-    price: getRandomInteger(1, CONSTANTS.MAX_PRICE),
-    type: CONSTANTS.OFFER_TYPES[getRandomInteger(0, CONSTANTS.OFFER_TYPES.length - 1)],
+    price: getRandomInteger(1, constants.MAX_PRICE),
+    type: constants.OFFER_TYPES[getRandomInteger(0, constants.OFFER_TYPES.length - 1)],
     rooms: getRandomInteger(1, 6),
     guests: getRandomInteger(1, 4),
-    checkin: CONSTANTS.TIMES[getRandomInteger(0, CONSTANTS.TIMES.length - 1)],
-    checkout: CONSTANTS.TIMES[getRandomInteger(0, CONSTANTS.TIMES.length - 1)],
-    features: getRandomArray(CONSTANTS.FEATURES),
-    description: CONSTANTS.DESCRIPTIONS[getRandomInteger(0, CONSTANTS.DESCRIPTIONS.length - 1)],
-    photos: getRandomArray(CONSTANTS.PHOTOS),
+    checkin: constants.TIMES[getRandomInteger(0, constants.TIMES.length - 1)],
+    checkout: constants.TIMES[getRandomInteger(0, constants.TIMES.length - 1)],
+    features: getRandomArray(constants.FEATURES),
+    description: constants.DESCRIPTIONS[getRandomInteger(0, constants.DESCRIPTIONS.length - 1)],
+    photos: getRandomArray(constants.PHOTOS),
   };
 }
 
