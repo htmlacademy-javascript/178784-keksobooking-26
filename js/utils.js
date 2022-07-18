@@ -1,3 +1,5 @@
+import { constants } from './constants.js';
+
 function getRandomInteger(min, max) {
   if (min >= max) {
     throw new Error('Aргумент min должен быть больше max');
@@ -27,4 +29,37 @@ function getRandomArray(sourceItems) {
   return [...new Set(result)];
 }
 
-export { getRandomInteger, getRandomFloat, getRandomArray };
+function enableElement(element) {
+  element.removeAttribute('disabled');
+}
+
+function disableElement(element) {
+  element.setAttribute('disabled', true);
+}
+
+function enableElements(elements) {
+  elements.forEach((element) => element.removeAttribute('disabled'));
+}
+
+function disableElements(elements) {
+  elements.forEach((element) => element.setAttribute('disabled', true));
+}
+
+const alertElement = document.querySelector('.alert');
+
+function showErrorAlert(message) {
+  if (!alertElement.classList.contains('alert--error')) {
+    alertElement.classList.add('alert--error');
+  }
+  if (alertElement.classList.contains(constants.HIDDEN_CLASS)) {
+    alertElement.textContent = message;
+    alertElement.classList.remove(constants.HIDDEN_CLASS);
+    setTimeout(() => {
+      alertElement.classList.add(constants.HIDDEN_CLASS);
+    }, 4000);
+  }
+}
+
+export { getRandomInteger, getRandomFloat, getRandomArray,
+  enableElement, disableElement, enableElements, disableElements,
+  showErrorAlert };

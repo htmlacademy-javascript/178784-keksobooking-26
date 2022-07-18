@@ -1,20 +1,41 @@
-import { CONSTANTS, MIN_PRICES_BY_TYPE } from './constants.js';
+import { constants } from './constants.js';
+import { enableElement, disableElement, enableElements, disableElements } from './utils.js';
 
 const priceSliderElement = document.querySelector('.ad-form__slider');
 const priceElement = document.querySelector('#price');
 const hostingTypeElement = document.querySelector('.ad-form').querySelector('#type');
+const form = document.querySelector('.ad-form');
+
+function initForm() {
+  initCapacity();
+  initTimeInOutAccording();
+  initPriceSlider();
+}
+
+const roomsCountElement = form.querySelector('#room_number');
+function initCapacity() {
+  updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
+  roomsCountElement.addEventListener('change', (evt) => {
+    updateEnableCapacitiesByRoomCounts(evt.target.value);
+  });
+
+}
+
+function resetForm() {
+  form.reset();
+  updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
+  initPriceByHosting();
+}
 
 function initPriceSlider() {
-  const startMinPrice = MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
-  priceElement.value = startMinPrice;
-
+  const priceValue = initPriceByHosting();
   noUiSlider.create(priceSliderElement, {
-    start: startMinPrice,
+    start: priceValue,
     step: 100,
     connect: 'lower',
     range: {
-      'min': startMinPrice,
-      'max': CONSTANTS.MAX_PRICE
+      'min': priceValue,
+      'max': constants.MAX_PRICE
     },
     format: {
       to: function (value) {
@@ -42,12 +63,18 @@ function initPriceSlider() {
   });
 }
 
+function initPriceByHosting() {
+  const priceValue = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  priceElement.value = priceValue;
+  return priceValue;
+}
+
 function onHostingTypeChanged() {
-  const newMinPrice = MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  const newMinPrice = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
   const updateSliderOptions = {
     range: {
       'min': newMinPrice,
-      'max': CONSTANTS.MAX_PRICE
+      'max': constants.MAX_PRICE
     }
   };
   const needUpdateValue = priceElement.value < newMinPrice;
@@ -84,20 +111,37 @@ function toggleActive(isActive) {
   }
 }
 
-function enableElement(element) {
-  element.removeAttribute('disabled');
+const capacitySelect = form.querySelector('#capacity');
+function updateEnableCapacitiesByRoomCounts(roomsCount) {
+  let selectedDisabledOption = null;
+  let firstEnebleOption = null;
+  capacitySelect.querySelectorAll('option').forEach((option) => {
+    option.disabled = !constants.CAPACITIES_BY_ROOMS.get(roomsCount).has(option.value);
+    if (!selectedDisabledOption && option.selected && option.disabled) {
+      selectedDisabledOption = option;
+    }
+    if (!firstEnebleOption && !option.disabled) {
+      firstEnebleOption = option;
+    }
+  });
+
+  if (selectedDisabledOption && firstEnebleOption) {
+    selectedDisabledOption.selected = false;
+    firstEnebleOption.selected = true;
+  }
 }
 
-function disableElement(element) {
-  element.setAttribute('disabled', true);
+const timeInElement = form.querySelector('#timein');
+const timeOutElement = form.querySelector('#timeout');
+function initTimeInOutAccording() {
+  form.querySelector('.ad-form__element--time').addEventListener('change', (evt) => {
+    if (evt.target.id === timeInElement.id) {
+      timeOutElement.value = evt.target.value;
+    } else if (evt.target.id === timeOutElement.id) {
+      timeInElement.value = evt.target.value;
+    }
+  });
 }
 
-function enableElements(elements) {
-  elements.forEach((element) => element.removeAttribute('disabled'));
-}
 
-function disableElements(elements) {
-  elements.forEach((element) => element.setAttribute('disabled', true));
-}
-
-export { toggleActive, initPriceSlider };
+export { toggleActive, initForm, resetForm };
