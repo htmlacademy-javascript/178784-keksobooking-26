@@ -60,6 +60,14 @@ function showErrorAlert(message) {
   }
 }
 
+function debounceAsync(callbackAsync, timeoutDelay) {
+  let timerId;
+  return (...rest) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(async () => await callbackAsync.apply(this, rest), timeoutDelay);
+  };
+}
+
 export { getRandomInteger, getRandomFloat, getRandomArray,
   enableElement, disableElement, enableElements, disableElements,
-  showErrorAlert };
+  showErrorAlert, debounceAsync };

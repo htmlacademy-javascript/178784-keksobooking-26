@@ -7,8 +7,8 @@ function createHostingPopup(popupTemplate, hosting) {
   addTextOrRemoveEmpty(template, '.popup__text--address', hosting.offer.address);
   addTextOrRemoveEmpty(template, '.popup__text--price', hosting.offer.price ? `${hosting.offer.price} ₽/ночь` : null);
   addTextOrRemoveEmpty(template, '.popup__type', hosting.offer.type ? constants.OFFER_TYPE_LABELS[hosting.offer.type] : null);
-  addTextOrRemoveEmpty(template, '.popup__text--capacity', hosting.offer.rooms && hosting.offer.capacity
-    ? `${constants.ROOMS_LABELS[hosting.offer.rooms]} ${constants.CAPACITY_LABELS[hosting.offer.capacity]}`
+  addTextOrRemoveEmpty(template, '.popup__text--capacity', hosting.offer.rooms && (hosting.offer.guests || hosting.offer.guests === 0)
+    ? `${constants.ROOMS_LABELS[hosting.offer.rooms]} ${constants.CAPACITY_LABELS[hosting.offer.guests]}`
     : null);
   addTextOrRemoveEmpty(template, '.popup__text--time', hosting.offer.checkin && hosting.offer.checkout
     ? `Заезд после ${hosting.offer.checkin}, выезд до ${hosting.offer.checkout}`

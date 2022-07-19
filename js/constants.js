@@ -46,6 +46,7 @@ const constants = {
   HIDDEN_CLASS: 'visually-hidden',
   ERROR_MESSAGE_BLOCK_ID: 'error',
   SUCCESS_MESSAGE_BLOCK_ID: 'success',
+  MAX_HOSTINGS_LENGTH: 10
 };
 
 
