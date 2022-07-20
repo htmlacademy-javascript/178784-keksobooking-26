@@ -41,7 +41,7 @@ function initMap() {
 }
 
 function setupFilters() {
-  flitersForm.addEventListener('change', debounceAsync(addHostingPinsAsync, 500));
+  flitersForm.addEventListener('change', debounceAsync(resetHostingPinsAsync, 500));
 }
 
 function addMainPin() {
@@ -64,16 +64,15 @@ function addMainPin() {
 }
 
 async function addHostingPinsAsync() {
-  if (markerGroup) {
-    markerGroup.clearLayers();
-  }
-  if (map) {
-    map.closePopup();
-  }
-
   const hostings = await getHostingsAsnc();
   const filteredHostings = filterHostings(hostings);
   filteredHostings.forEach((hosting) => addHostingPin(hosting));
+}
+
+async function resetHostingPinsAsync() {
+  markerGroup.clearLayers();
+  map.closePopup();
+  await addHostingPinsAsync();
 }
 
 function addHostingPin(hosting) {
