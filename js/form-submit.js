@@ -14,7 +14,6 @@ function setSubmitForm(onSuccess, onError) {
     if (validateForm()) {
       try {
         const formData = new FormData(form);
-        formData.append('address', form.querySelector('#address').value);
         await sendFormAsync(formData);
         showMessageBlockById(constants.SUCCESS_MESSAGE_BLOCK_ID);
         if (onSuccess) {

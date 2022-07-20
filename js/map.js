@@ -2,11 +2,14 @@ import { constants } from './constants.js';
 import { toggleActive } from './form.js';
 import { getHostingsAsnc } from './data.js';
 import { createHostingPopup } from './html-generator.js';
-import { showErrorAlert } from './utils.js';
+import { showErrorAlert, debounceAsync } from './utils.js';
+import { filterHostings } from './filter.js';
 
 const addressElement = document.querySelector('#address');
 const popupTemplate = document.querySelector('#card').content
   .querySelector('.popup');
+const flitersForm = document.querySelector('.map__filters');
+
 let map;
 let mainPinMarker;
 let markerGroup;
@@ -17,8 +20,8 @@ function initMap() {
       toggleActive(true);
       setAddressCoords(constants.TOKYO_CENTER);
       try {
-        const hostings = await getHostingsAsnc();
-        addHostingPins(hostings);
+        await addHostingPinsAsync();
+        setupFilters();
       }
       catch(ex) {
         showErrorAlert('Не удалось получить данные, пожалуйста, повторите поптыку позже');
@@ -35,6 +38,10 @@ function initMap() {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     },
   ).addTo(map);
+}
+
+function setupFilters() {
+  flitersForm.addEventListener('change', debounceAsync(resetHostingPinsAsync, 500));
 }
 
 function addMainPin() {
@@ -56,8 +63,16 @@ function addMainPin() {
   });
 }
 
-function addHostingPins(hostings) {
-  hostings.forEach((hosting) => addHostingPin(hosting));
+async function addHostingPinsAsync() {
+  const hostings = await getHostingsAsnc();
+  const filteredHostings = filterHostings(hostings);
+  filteredHostings.forEach((hosting) => addHostingPin(hosting));
+}
+
+async function resetHostingPinsAsync() {
+  markerGroup.clearLayers();
+  map.closePopup();
+  await addHostingPinsAsync();
 }
 
 function addHostingPin(hosting) {
