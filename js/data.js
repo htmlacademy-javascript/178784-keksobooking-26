@@ -7,7 +7,7 @@ async function getHostingsAsnc() {
 }
 
 async function sendFormAsync(formData) {
-  const response = await fetch('https://26.javascript.pages.academy/keksobooking1', {
+  const response = await fetch('https://26.javascript.pages.academy/keksobooking', {
     method: 'POST',
     body: formData
   });
