@@ -103,6 +103,7 @@ function resetMap() {
 function resetMainPin() {
   mainPinMarker.setLatLng(constants.TOKYO_CENTER);
   setAddressCoords(constants.TOKYO_CENTER);
+  resetHostingPinsAsync();
 }
 
 export { initMap, resetMap };

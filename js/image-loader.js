@@ -1,4 +1,5 @@
 import { constants } from './constants.js';
+import { showErrorAlert } from './utils.js';
 
 function initImageLoaders() {
   initImageLoader('.ad-form__field input[type=file]', '.ad-form-header__preview');
@@ -23,6 +24,9 @@ function initImageLoader(fileChoserSelector, previewBlockSelector) {
     const isValid = constants.FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
     if (isValid) {
       preview.src = URL.createObjectURL(file);
+    }
+    else {
+      showErrorAlert(`Можно загружать только изображения: ${constants.FILE_TYPES.join(', ')}`);
     }
   });
 }

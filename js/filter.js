@@ -77,4 +77,8 @@ function filterHostings(hostings) {
   return filteredHostings;
 }
 
-export { filterHostings };
+function resetFilters() {
+  flitersForm.reset();
+}
+
+export { filterHostings, resetFilters };
