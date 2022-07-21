@@ -49,7 +49,7 @@ const constants = {
   ERROR_MESSAGE_BLOCK_ID: 'error',
   SUCCESS_MESSAGE_BLOCK_ID: 'success',
   MAX_HOSTINGS_LENGTH: 10,
-  FILE_TYPES: ['jpg', 'jpeg', 'png']
+  FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png']
 };
 
 

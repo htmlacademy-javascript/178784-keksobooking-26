@@ -69,10 +69,16 @@ const HOUSING_FILTERS = [HOUSING_TYPE_FILTER, HOUSING_PRICE_FILTER, HOUSING_ROOM
 
 function filterHostings(hostings) {
   const filtersFormData = new FormData(flitersForm);
-  const filteredHostings = hostings
-    .slice()
-    .filter((hosting) => HOUSING_FILTERS.every((filter) => filter.applyFilter(hosting, filtersFormData)))
-    .slice(0, constants.MAX_HOSTINGS_LENGTH);
+  const filteredHostings = [];
+
+  let index = 0;
+  while(filteredHostings.length < constants.MAX_HOSTINGS_LENGTH && index < hostings.length) {
+    const hosting = hostings[index];
+    if (HOUSING_FILTERS.every((filter) => filter.applyFilter(hosting, filtersFormData))) {
+      filteredHostings.push(hosting);
+    }
+    index++;
+  }
 
   return filteredHostings;
 }
