@@ -409,6 +409,11 @@ fieldset {
   margin-right: 14px;
 }
 
+.ad-form__element input[readonly] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .ad-form__slider.noUi-target:not(#fake-id) {
   width: calc(100% - 20px);
   height: 5px;

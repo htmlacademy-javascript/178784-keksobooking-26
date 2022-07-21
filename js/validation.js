@@ -10,9 +10,9 @@ const pristine = new Pristine(form, {
   errorTextClass: 'text-error'
 });
 
-function setupFormValidation() {
-  setupPriceValidation();
-  setupCapacityValidation();
+function initFormValidation() {
+  initPriceValidation();
+  initCapacityValidation();
   return pristine;
 }
 
@@ -20,7 +20,7 @@ function validateForm() {
   return pristine.validate();
 }
 
-function setupPriceValidation() {
+function initPriceValidation() {
   const priceElement = form.querySelector('#price');
   const typeElement = form.querySelector('#type');
 
@@ -34,7 +34,7 @@ function setupPriceValidation() {
 
 const capacitySelect = form.querySelector('#capacity');
 const roomsCountElement = form.querySelector('#room_number');
-function setupCapacityValidation() {
+function initCapacityValidation() {
   pristine.addValidator(capacitySelect, (value) => {
     if (constants.CAPACITIES_BY_ROOMS.get(roomsCountElement.value).has(value)) {
       return true;
@@ -43,6 +43,6 @@ function setupCapacityValidation() {
   }, 'Недоступное для выбора значение');
 }
 
-export { setupFormValidation, validateForm };
+export { initFormValidation, validateForm };
 
 

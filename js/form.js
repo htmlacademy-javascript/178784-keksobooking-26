@@ -18,7 +18,6 @@ function initCapacity() {
   roomsCountElement.addEventListener('change', (evt) => {
     updateEnableCapacitiesByRoomCounts(evt.target.value);
   });
-
 }
 
 function resetForm() {
@@ -86,29 +85,27 @@ function onHostingTypeChanged() {
   priceSliderElement.noUiSlider.updateOptions(updateSliderOptions);
 }
 
-function toggleActive(isActive) {
-  const adForm = document.querySelector('.ad-form');
-  const adFormFieldsets = adForm.querySelectorAll('fieldset');
-  const filtersForm = document.querySelector('.map__filters');
-  const filtersFormSelectors = document.querySelectorAll('select');
-  const filtersFormFieldsets = document.querySelectorAll('fieldset');
+const adFormFieldsets = form.querySelectorAll('fieldset');
+const filtersForm = document.querySelector('.map__filters');
+const filtersFormSelectors = document.querySelectorAll('select');
+const filtersFormFieldsets = document.querySelectorAll('fieldset');
 
-  if (isActive) {
-    adForm.classList.remove('ad-form--disabled');
-    filtersForm.classList.remove('map__filters--disabled');
-    enableElement(priceSliderElement);
-    enableElements(adFormFieldsets);
-    enableElements(filtersFormSelectors);
-    enableElements(filtersFormFieldsets);
+function enableForm() {
+  form.classList.remove('ad-form--disabled');
+  filtersForm.classList.remove('map__filters--disabled');
+  enableElement(priceSliderElement);
+  enableElements(adFormFieldsets);
+  enableElements(filtersFormSelectors);
+  enableElements(filtersFormFieldsets);
+}
 
-  } else {
-    adForm.classList.add('ad-form--disabled');
-    filtersForm.classList.add('map__filters--disabled');
-    disableElement(priceSliderElement);
-    disableElements(adFormFieldsets);
-    disableElements(filtersFormSelectors);
-    disableElements(filtersFormFieldsets);
-  }
+function disableForm() {
+  form.classList.add('ad-form--disabled');
+  filtersForm.classList.add('map__filters--disabled');
+  disableElement(priceSliderElement);
+  disableElements(adFormFieldsets);
+  disableElements(filtersFormSelectors);
+  disableElements(filtersFormFieldsets);
 }
 
 const capacitySelect = form.querySelector('#capacity');
@@ -143,5 +140,4 @@ function initTimeInOutAccording() {
   });
 }
 
-
-export { toggleActive, initForm, resetForm };
+export { enableForm, disableForm, initForm, resetForm };

@@ -1,5 +1,5 @@
 import { constants } from './constants.js';
-import { toggleActive } from './form.js';
+import { enableForm } from './form.js';
 import { getHostingsAsnc } from './data.js';
 import { createHostingPopup } from './html-generator.js';
 import { showErrorAlert, debounceAsync } from './utils.js';
@@ -17,7 +17,7 @@ let markerGroup;
 function initMap() {
   map = L.map('map-canvas')
     .on('load', async () => {
-      toggleActive(true);
+      enableForm(true);
       setAddressCoords(constants.TOKYO_CENTER);
       try {
         await addHostingPinsAsync();
@@ -40,10 +40,6 @@ function initMap() {
   ).addTo(map);
 }
 
-function setupFilters() {
-  flitersForm.addEventListener('change', debounceAsync(resetHostingPinsAsync, 500));
-}
-
 function addMainPin() {
   const mainPinIcon = L.icon({
     iconUrl: './img/main-pin.svg',
@@ -63,16 +59,24 @@ function addMainPin() {
   });
 }
 
-async function addHostingPinsAsync() {
-  const hostings = await getHostingsAsnc();
-  const filteredHostings = filterHostings(hostings);
-  filteredHostings.forEach((hosting) => addHostingPin(hosting));
+function setAddressCoords(coords) {
+  addressElement.value = `${coords.lat.toFixed(constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(constants.COORDS_FRICTION_DIGITS)}`;
+}
+
+function setupFilters() {
+  flitersForm.addEventListener('change', debounceAsync(resetHostingPinsAsync, 500));
 }
 
 async function resetHostingPinsAsync() {
   markerGroup.clearLayers();
   map.closePopup();
   await addHostingPinsAsync();
+}
+
+async function addHostingPinsAsync() {
+  const hostings = await getHostingsAsnc();
+  const filteredHostings = filterHostings(hostings);
+  filteredHostings.forEach((hosting) => addHostingPin(hosting));
 }
 
 function addHostingPin(hosting) {
@@ -89,10 +93,6 @@ function addHostingPin(hosting) {
   hostingPinMarker
     .addTo(markerGroup)
     .bindPopup(createHostingPopup(popupTemplate, hosting));
-}
-
-function setAddressCoords(coords) {
-  addressElement.value = `${coords.lat.toFixed(constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(constants.COORDS_FRICTION_DIGITS)}`;
 }
 
 function resetMap() {

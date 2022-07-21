@@ -1,21 +1,20 @@
 
-import { toggleActive, initForm, resetForm } from './form.js';
+import { disableForm, initForm, resetForm } from './form.js';
 import { initMap, resetMap } from './map.js';
-import { setResetFrom, setSubmitForm } from './form-submit.js';
-import { setupFormValidation } from './validation.js';
+import { initFormSubmit, initFormReset } from './form-submit.js';
+import { initFormValidation } from './validation.js';
+import { initImageLoaders } from './image-loader.js';
 
-toggleActive(false);
-initForm();
-setupFormValidation();
+disableForm();
+
 initMap();
-setSubmitForm(successSubmit);
-setResetFrom(reset);
+initForm();
+initFormValidation();
+initFormSubmit(resetAll);
+initFormReset(resetAll);
+initImageLoaders();
 
-function successSubmit() {
-  reset();
-}
-
-function reset() {
+function resetAll() {
   resetForm();
   resetMap();
 }

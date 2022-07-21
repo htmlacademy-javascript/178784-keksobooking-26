@@ -33,9 +33,9 @@ class PriceHostingFilter extends BaseSelectFilter {
     this.filterFunc = (propValue, filterValue) =>  {
       switch (filterValue) {
         case 'low':
-          return propValue < 10000;
+          return propValue < constants.LOW_PRICE_LIMIT;
         case 'middle':
-          return propValue >= 10000 && propValue < 50000;
+          return propValue >= constants.LOW_PRICE_LIMIT && propValue < constants.MIDDLE_PRICE_LIMIT;
         case 'high':
           return propValue >= 50000;
         default:
