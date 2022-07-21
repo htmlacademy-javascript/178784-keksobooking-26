@@ -60,7 +60,7 @@ function showErrorAlert(message) {
   }
 }
 
-function debounceAsync(callbackAsync, timeoutDelay) {
+function debounceAsync(callbackAsync, timeoutDelay = 500) {
   let timerId;
   return (...rest) => {
     clearTimeout(timerId);

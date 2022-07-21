@@ -33,9 +33,9 @@ class PriceHostingFilter extends BaseSelectFilter {
     this.filterFunc = (propValue, filterValue) =>  {
       switch (filterValue) {
         case 'low':
-          return propValue < 10000;
+          return propValue < constants.LOW_PRICE_LIMIT;
         case 'middle':
-          return propValue >= 10000 && propValue < 50000;
+          return propValue >= constants.LOW_PRICE_LIMIT && propValue < constants.MIDDLE_PRICE_LIMIT;
         case 'high':
           return propValue >= 50000;
         default:
@@ -69,12 +69,22 @@ const HOUSING_FILTERS = [HOUSING_TYPE_FILTER, HOUSING_PRICE_FILTER, HOUSING_ROOM
 
 function filterHostings(hostings) {
   const filtersFormData = new FormData(flitersForm);
-  const filteredHostings = hostings
-    .slice()
-    .filter((hosting) => HOUSING_FILTERS.every((filter) => filter.applyFilter(hosting, filtersFormData)))
-    .slice(0, constants.MAX_HOSTINGS_LENGTH);
+  const filteredHostings = [];
+
+  let index = 0;
+  while(filteredHostings.length < constants.MAX_HOSTINGS_LENGTH && index < hostings.length) {
+    const hosting = hostings[index];
+    if (HOUSING_FILTERS.every((filter) => filter.applyFilter(hosting, filtersFormData))) {
+      filteredHostings.push(hosting);
+    }
+    index++;
+  }
 
   return filteredHostings;
 }
 
-export { filterHostings };
+function resetFilters() {
+  flitersForm.reset();
+}
+
+export { filterHostings, resetFilters };

@@ -7,7 +7,7 @@ const form = document.querySelector('.ad-form');
 const formResetButton = document.querySelector('.ad-form__reset');
 const messageBlockById = new Map();
 
-function setSubmitForm(onSuccess, onError) {
+function initFormSubmit(onSuccess, onError) {
   setupMessageBlocks();
   form.addEventListener('submit', async (evt) => {
     evt.preventDefault();
@@ -28,7 +28,7 @@ function setSubmitForm(onSuccess, onError) {
       }
     }
     else {
-      showErrorAlert('форма не валидна');
+      showErrorAlert('Заполните, пожалуйста, все обязательные поля');
     }
   });
 }
@@ -38,7 +38,7 @@ function setupMessageBlocks() {
   addMessageBlockElement(constants.ERROR_MESSAGE_BLOCK_ID);
 }
 
-function setResetFrom(onReset) {
+function initFormReset(onReset) {
   formResetButton.addEventListener('click', (evt) => {
     evt.preventDefault();
     onReset();
@@ -50,6 +50,7 @@ function addMessageBlockElement(id) {
     .content
     .querySelector(`.${id}`)
     .cloneNode(true);
+
   messageBlockById.set(id, blockElement);
   hideMessageBlock(blockElement);
   document.body.append(blockElement);
@@ -92,7 +93,6 @@ function showMessageBlock(blockElement) {
 
 function hideMessageBlock(blockElement) {
   blockElement.classList.add(constants.HIDDEN_CLASS);
-
 }
 
-export { setSubmitForm, setResetFrom };
+export { initFormSubmit, initFormReset };

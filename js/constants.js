@@ -8,6 +8,8 @@ const constants = {
   PHOTOS: ['https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
     'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
     'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'],
+  LOW_PRICE_LIMIT: 10000,
+  MIDDLE_PRICE_LIMIT: 50000,
   MAX_PRICE: 100000,
   TOKYO_CENTER: { lat: 35.7, lng: 139.425 },
   COORDS_FRICTION_DIGITS: 5,
@@ -46,7 +48,8 @@ const constants = {
   HIDDEN_CLASS: 'visually-hidden',
   ERROR_MESSAGE_BLOCK_ID: 'error',
   SUCCESS_MESSAGE_BLOCK_ID: 'success',
-  MAX_HOSTINGS_LENGTH: 10
+  MAX_HOSTINGS_LENGTH: 10,
+  FILE_TYPES: ['gif', 'jpg', 'jpeg', 'png']
 };
 
 
