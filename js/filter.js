@@ -58,14 +58,14 @@ class FeaturesFilter {
   }
 }
 
-const HOUSING_TYPE_FILTER = new EqualPropertyFilter('housing-type', (hosting) => hosting.offer.type);
-const HOUSING_PRICE_FILTER = new PriceHostingFilter();
-const HOUSING_ROOMS_FILTER = new EqualPropertyFilter('housing-rooms', (hosting) => +hosting.offer.rooms);
-const HOUSING_GUESTS_FILTER = new EqualPropertyFilter('housing-guests', (hosting) => +hosting.offer.guests);
-const FEATURES_FILTER = new FeaturesFilter('filter-wifi', 'filter-dishwasher', 'filter-parking',
+const housingTypeFilter = new EqualPropertyFilter('housing-type', (hosting) => hosting.offer.type);
+const housingPriceFilter = new PriceHostingFilter();
+const housingRoomsFilter = new EqualPropertyFilter('housing-rooms', (hosting) => +hosting.offer.rooms);
+const housingGuestsFilter = new EqualPropertyFilter('housing-guests', (hosting) => +hosting.offer.guests);
+const featuresFilter = new FeaturesFilter('filter-wifi', 'filter-dishwasher', 'filter-parking',
   'filter-washer', 'filter-elevator', 'filter-conditioner');
 
-const HOUSING_FILTERS = [HOUSING_TYPE_FILTER, HOUSING_PRICE_FILTER, HOUSING_ROOMS_FILTER, HOUSING_GUESTS_FILTER, FEATURES_FILTER];
+const hostingFilters = [housingTypeFilter, housingPriceFilter, housingRoomsFilter, housingGuestsFilter, featuresFilter];
 
 function filterHostings(hostings) {
   const filtersFormData = new FormData(flitersForm);
@@ -74,7 +74,7 @@ function filterHostings(hostings) {
   let index = 0;
   while(filteredHostings.length < constants.MAX_HOSTINGS_LENGTH && index < hostings.length) {
     const hosting = hostings[index];
-    if (HOUSING_FILTERS.every((filter) => filter.applyFilter(hosting, filtersFormData))) {
+    if (hostingFilters.every((filter) => filter.applyFilter(hosting, filtersFormData))) {
       filteredHostings.push(hosting);
     }
     index++;
