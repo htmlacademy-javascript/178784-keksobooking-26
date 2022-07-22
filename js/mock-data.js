@@ -1,7 +1,6 @@
 import { getRandomInteger, getRandomFloat, getRandomArray } from './utils.js';
 import { constants } from './constants.js';
 
-
 function createHostings(length) {
   return Array.from({ length: length }, () => createHosting());
 }
