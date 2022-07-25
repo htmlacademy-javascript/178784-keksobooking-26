@@ -1,33 +1,28 @@
-import { constants } from './constants.js';
+import { Constants } from './constants.js';
 import { enableForm } from './form.js';
 import { getHostingsAsnc } from './data.js';
 import { createHostingPopup } from './html-generator.js';
 import { showErrorAlert, debounceAsync } from './utils.js';
 import { filterHostings } from './filter.js';
 
-const addressElement = document.querySelector('#address');
-const popupTemplate = document.querySelector('#card').content
-  .querySelector('.popup');
-const flitersForm = document.querySelector('.map__filters');
+const addressElement = document.querySelector(Constants.ADDRESS_SELECTOR);
+const popupTemplate = document.querySelector(Constants.CARD_TEMPLATE_SELECTOR).content
+  .querySelector(Constants.TEMPLATE_POPUP_SELECTOR);
+const flitersForm = document.querySelector(Constants.MAP_FILTERS_SELECTOR);
 
 let map;
 let mainPinMarker;
 let markerGroup;
 
 function initMap() {
-  map = L.map('map-canvas')
-    .on('load', async () => {
+  map = L.map(Constants.MAP_CANVAS_CLASS)
+    .on(Constants.MAP_LOAD_EVENT, async () => {
       enableForm(true);
-      setAddressCoords(constants.TOKYO_CENTER);
-      try {
-        await addHostingPinsAsync();
-        setupFilters();
-      }
-      catch(ex) {
-        showErrorAlert('Не удалось получить данные, пожалуйста, повторите поптыку позже');
-      }
+      setAddressCoords(Constants.TOKYO_CENTER);
+      await addHostingPinsAsync();
+      setupFilters();
     })
-    .setView(constants.TOKYO_CENTER, 10);
+    .setView(Constants.TOKYO_CENTER, 10);
 
   markerGroup = L.layerGroup().addTo(map);
   addMainPin();
@@ -47,24 +42,24 @@ function addMainPin() {
     iconAncor: [26, 52]
   });
 
-  mainPinMarker = L.marker(constants.TOKYO_CENTER, {
+  mainPinMarker = L.marker(Constants.TOKYO_CENTER, {
     draggable: true,
     icon: mainPinIcon
   });
 
   mainPinMarker.addTo(map);
 
-  mainPinMarker.on('moveend', (evt) => {
+  mainPinMarker.on(Constants.MAP_MARKER_MOOVEND_EVENT, (evt) => {
     setAddressCoords(evt.target.getLatLng());
   });
 }
 
 function setAddressCoords(coords) {
-  addressElement.value = `${coords.lat.toFixed(constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(constants.COORDS_FRICTION_DIGITS)}`;
+  addressElement.value = `${coords.lat.toFixed(Constants.COORDS_FRICTION_DIGITS)}, ${coords.lng.toFixed(Constants.COORDS_FRICTION_DIGITS)}`;
 }
 
 function setupFilters() {
-  flitersForm.addEventListener('change', debounceAsync(resetHostingPinsAsync, 500));
+  flitersForm.addEventListener(Constants.CHANGE_EVENT, debounceAsync(resetHostingPinsAsync, Constants.MAP_FILTER_DEBOUNCE_DELAY_MS));
 }
 
 async function resetHostingPinsAsync() {
@@ -74,35 +69,44 @@ async function resetHostingPinsAsync() {
 }
 
 async function addHostingPinsAsync() {
-  const hostings = await getHostingsAsnc();
+  let hostings;
+  try {
+    hostings = await getHostingsAsnc();
+  }
+  catch(ex) {
+    showErrorAlert('Не удалось получить данные, пожалуйста, повторите поптыку позже');
+  }
   const filteredHostings = filterHostings(hostings);
   filteredHostings.forEach((hosting) => addHostingPin(hosting));
 }
 
 function addHostingPin(hosting) {
-  const hostingPinIcon = L.icon({
-    iconUrl: './img/pin.svg',
-    iconSize: [40, 40],
-    iconAncor: [20, 40]
-  });
+  if (hosting) {
+    const hostingPinIcon = L.icon({
+      iconUrl: './img/pin.svg',
+      iconSize: [40, 40],
+      iconAncor: [20, 40]
+    });
 
-  const hostingPinMarker = L.marker(hosting.location, {
-    icon: hostingPinIcon
-  });
+    const hostingPinMarker = L.marker(hosting.location, {
+      icon: hostingPinIcon
+    });
 
-  hostingPinMarker
-    .addTo(markerGroup)
-    .bindPopup(createHostingPopup(popupTemplate, hosting));
+    hostingPinMarker
+      .addTo(markerGroup)
+      .bindPopup(createHostingPopup(popupTemplate, hosting));
+  }
 }
 
 function resetMap() {
   resetMainPin();
   map.closePopup();
+  map.setView(Constants.TOKYO_CENTER, 10);
 }
 
 function resetMainPin() {
-  mainPinMarker.setLatLng(constants.TOKYO_CENTER);
-  setAddressCoords(constants.TOKYO_CENTER);
+  mainPinMarker.setLatLng(Constants.TOKYO_CENTER);
+  setAddressCoords(Constants.TOKYO_CENTER);
   resetHostingPinsAsync();
 }
 
