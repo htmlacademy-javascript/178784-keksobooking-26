@@ -1,34 +1,48 @@
-import { constants } from './constants.js';
+import { Constants } from './Constants.js';
 import { showErrorAlert } from './utils.js';
 
+let avatarPreviewElement;
+let hostingPreviewElement;
+
 function initImageLoaders() {
-  initImageLoader('.ad-form__field input[type=file]', '.ad-form-header__preview');
-  initImageLoader('.ad-form__upload input[type=file]', '.ad-form__photo');
+  avatarPreviewElement = initImageLoader(Constants.AVATAR_FILE_CHOOSER_SELECTOR, Constants.AVATAR_PREVIEW_SELECTOR);
+  hostingPreviewElement = initImageLoader(Constants.HOSTING_FILE_CHOOSER_SELECTOR, Constants.HOSTING_PREVIEW_SELECTOR, true);
 }
 
-function initImageLoader(fileChoserSelector, previewBlockSelector) {
+function initImageLoader(fileChoserSelector, previewSelector, idDefaultEmpty) {
   const fileChoser = document.querySelector(fileChoserSelector);
-  const previewBlock = document.querySelector(previewBlockSelector);
-  let preview = previewBlock.querySelector('img');
+  const previewElement = document.querySelector(previewSelector);
 
-  if (!preview) {
-    preview = document.createElement('img');
-    preview.style.width = '100%';
-    preview.style.height = '100%';
-    previewBlock.append(preview);
-  }
-
-  fileChoser.addEventListener('change', () => {
+  fileChoser.addEventListener(Constants.CHANGE_EVENT, () => {
     const file = fileChoser.files[0];
     const fileName = file.name.toLowerCase();
-    const isValid = constants.FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
+    const isValid = Constants.FILE_TYPES.some((fileType) => fileName.endsWith(fileType));
     if (isValid) {
-      preview.src = URL.createObjectURL(file);
+      previewElement.src = URL.createObjectURL(file);
+      if (idDefaultEmpty) {
+        previewElement.classList.remove(Constants.PREVIEW_EMPTY_CLASS);
+      }
     }
     else {
-      showErrorAlert(`Можно загружать только изображения: ${constants.FILE_TYPES.join(', ')}`);
+      showErrorAlert(`Можно загружать только изображения: ${Constants.FILE_TYPES.join(', ')}`);
     }
   });
+  return previewElement;
 }
 
-export { initImageLoaders };
+function resetImages() {
+  resetAvatarImage();
+  resetHostingImage();
+}
+
+function resetAvatarImage() {
+  avatarPreviewElement.src = Constants.DEFAULT_AVATAR_SRC;
+}
+
+function resetHostingImage() {
+  hostingPreviewElement.src = '';
+  hostingPreviewElement.classList.add(Constants.PREVIEW_EMPTY_CLASS);
+}
+
+
+export { initImageLoaders, resetImages };

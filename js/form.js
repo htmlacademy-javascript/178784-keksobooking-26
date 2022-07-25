@@ -1,10 +1,18 @@
-import { constants } from './constants.js';
+import { Constants } from './constants.js';
 import { enableElement, disableElement, enableElements, disableElements } from './utils.js';
 
-const priceSliderElement = document.querySelector('.ad-form__slider');
-const priceElement = document.querySelector('#price');
-const hostingTypeElement = document.querySelector('.ad-form').querySelector('#type');
-const form = document.querySelector('.ad-form');
+const priceSliderElement = document.querySelector(Constants.PRICE_SLIDER_SELECTOR);
+const priceElement = document.querySelector(Constants.PRICE_SELECTOR);
+const hostingTypeElement = document.querySelector(Constants.FORM_SELECTOR).querySelector(Constants.HOSTING_TYPE_SELECTOR);
+const form = document.querySelector(Constants.FORM_SELECTOR);
+const roomsCountElement = form.querySelector(Constants.ROOM_NUMBER_SELECTOR);
+const adFormFieldsets = form.querySelectorAll(Constants.FIELDSETS_SELECTOR);
+const filtersForm = document.querySelector(Constants.MAP_FILTERS_SELECTOR);
+const filtersFormSelectors = document.querySelectorAll(Constants.SELECTS_SELECTOR);
+const filtersFormFieldsets = document.querySelectorAll(Constants.FIELDSETS_SELECTOR);
+const capacitySelect = form.querySelector(Constants.CAPACITY_SELECTOR);
+const timeInElement = form.querySelector(Constants.TIMEIN_SELECTOR);
+const timeOutElement = form.querySelector(Constants.TIMEOUT_SELECTOR);
 
 function initForm() {
   initCapacity();
@@ -12,10 +20,9 @@ function initForm() {
   initPriceSlider();
 }
 
-const roomsCountElement = form.querySelector('#room_number');
 function initCapacity() {
   updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
-  roomsCountElement.addEventListener('change', (evt) => {
+  roomsCountElement.addEventListener(Constants.CHANGE_EVENT, (evt) => {
     updateEnableCapacitiesByRoomCounts(evt.target.value);
   });
 }
@@ -24,6 +31,7 @@ function resetForm() {
   form.reset();
   updateEnableCapacitiesByRoomCounts(roomsCountElement.value);
   initPriceByHosting();
+  priceSliderElement.noUiSlider.reset();
 }
 
 function initPriceSlider() {
@@ -34,7 +42,7 @@ function initPriceSlider() {
     connect: 'lower',
     range: {
       'min': priceValue,
-      'max': constants.MAX_PRICE
+      'max': Constants.MAX_PRICE
     },
     format: {
       to: function (value) {
@@ -49,31 +57,31 @@ function initPriceSlider() {
     },
   });
 
-  priceSliderElement.noUiSlider.on('change', () => {
+  priceSliderElement.noUiSlider.on(Constants.CHANGE_EVENT, () => {
     priceElement.value = priceSliderElement.noUiSlider.get();
   });
 
-  priceElement.addEventListener('change', () => {
+  priceElement.addEventListener(Constants.CHANGE_EVENT, () => {
     priceSliderElement.noUiSlider.set(priceElement.value);
   });
 
-  hostingTypeElement.addEventListener('change', () => {
+  hostingTypeElement.addEventListener(Constants.CHANGE_EVENT, () => {
     onHostingTypeChanged();
   });
 }
 
 function initPriceByHosting() {
-  const priceValue = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  const priceValue = Constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
   priceElement.value = priceValue;
   return priceValue;
 }
 
 function onHostingTypeChanged() {
-  const newMinPrice = constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
+  const newMinPrice = Constants.MIN_PRICES_BY_TYPE.get(hostingTypeElement.value);
   const updateSliderOptions = {
     range: {
       'min': newMinPrice,
-      'max': constants.MAX_PRICE
+      'max': Constants.MAX_PRICE
     }
   };
   const needUpdateValue = priceElement.value < newMinPrice;
@@ -85,14 +93,9 @@ function onHostingTypeChanged() {
   priceSliderElement.noUiSlider.updateOptions(updateSliderOptions);
 }
 
-const adFormFieldsets = form.querySelectorAll('fieldset');
-const filtersForm = document.querySelector('.map__filters');
-const filtersFormSelectors = document.querySelectorAll('select');
-const filtersFormFieldsets = document.querySelectorAll('fieldset');
-
 function enableForm() {
-  form.classList.remove('ad-form--disabled');
-  filtersForm.classList.remove('map__filters--disabled');
+  form.classList.remove(Constants.FORM_DISABLED_CLASS);
+  filtersForm.classList.remove(Constants.MAP_FILTERS_DISABLED_CLASS);
   enableElement(priceSliderElement);
   enableElements(adFormFieldsets);
   enableElements(filtersFormSelectors);
@@ -100,20 +103,19 @@ function enableForm() {
 }
 
 function disableForm() {
-  form.classList.add('ad-form--disabled');
-  filtersForm.classList.add('map__filters--disabled');
+  form.classList.add(Constants.FORM_DISABLED_CLASS);
+  filtersForm.classList.add(Constants.MAP_FILTERS_DISABLED_CLASS);
   disableElement(priceSliderElement);
   disableElements(adFormFieldsets);
   disableElements(filtersFormSelectors);
   disableElements(filtersFormFieldsets);
 }
 
-const capacitySelect = form.querySelector('#capacity');
 function updateEnableCapacitiesByRoomCounts(roomsCount) {
   let selectedDisabledOption = null;
   let firstEnebleOption = null;
-  capacitySelect.querySelectorAll('option').forEach((option) => {
-    option.disabled = !constants.CAPACITIES_BY_ROOMS.get(roomsCount).has(option.value);
+  capacitySelect.querySelectorAll(Constants.OPTIONS_SELECTOR).forEach((option) => {
+    option.disabled = !Constants.CAPACITIES_BY_ROOMS.get(roomsCount).has(option.value);
     if (!selectedDisabledOption && option.selected && option.disabled) {
       selectedDisabledOption = option;
     }
@@ -128,10 +130,8 @@ function updateEnableCapacitiesByRoomCounts(roomsCount) {
   }
 }
 
-const timeInElement = form.querySelector('#timein');
-const timeOutElement = form.querySelector('#timeout');
 function initTimeInOutAccording() {
-  form.querySelector('.ad-form__element--time').addEventListener('change', (evt) => {
+  form.querySelector(Constants.TIME_FIELDSET_SELECTOR).addEventListener(Constants.CHANGE_EVENT, (evt) => {
     if (evt.target.id === timeInElement.id) {
       timeOutElement.value = evt.target.value;
     } else if (evt.target.id === timeOutElement.id) {

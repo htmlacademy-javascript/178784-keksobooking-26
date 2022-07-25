@@ -1,27 +1,27 @@
-import { constants } from './constants.js';
+import { Constants } from './constants.js';
 import { sendFormAsync } from './data.js';
-import { showErrorAlert } from './utils.js';
+import { showErrorAlert, isEscapePressed } from './utils.js';
 import { validateForm } from './validation.js';
 
-const form = document.querySelector('.ad-form');
-const formResetButton = document.querySelector('.ad-form__reset');
+const form = document.querySelector(Constants.FORM_SELECTOR);
+const formResetButton = document.querySelector(Constants.FORM_RESET_SELECTOR);
 const messageBlockById = new Map();
 
 function initFormSubmit(onSuccess, onError) {
   setupMessageBlocks();
-  form.addEventListener('submit', async (evt) => {
+  form.addEventListener(Constants.SUMBIT_EVENT, async (evt) => {
     evt.preventDefault();
     if (validateForm()) {
       try {
         const formData = new FormData(form);
         await sendFormAsync(formData);
-        showMessageBlockById(constants.SUCCESS_MESSAGE_BLOCK_ID);
+        showMessageBlockById(Constants.SUCCESS_MESSAGE_BLOCK_ID);
         if (onSuccess) {
           onSuccess();
         }
       }
       catch(ex) {
-        showMessageBlockById(constants.ERROR_MESSAGE_BLOCK_ID);
+        showMessageBlockById(Constants.ERROR_MESSAGE_BLOCK_ID);
         if (onError) {
           onError(ex);
         }
@@ -34,12 +34,12 @@ function initFormSubmit(onSuccess, onError) {
 }
 
 function setupMessageBlocks() {
-  addMessageBlockElement(constants.SUCCESS_MESSAGE_BLOCK_ID);
-  addMessageBlockElement(constants.ERROR_MESSAGE_BLOCK_ID);
+  addMessageBlockElement(Constants.SUCCESS_MESSAGE_BLOCK_ID);
+  addMessageBlockElement(Constants.ERROR_MESSAGE_BLOCK_ID);
 }
 
 function initFormReset(onReset) {
-  formResetButton.addEventListener('click', (evt) => {
+  formResetButton.addEventListener(Constants.CLICK_EVENT, (evt) => {
     evt.preventDefault();
     onReset();
   });
@@ -61,25 +61,28 @@ function showMessageBlockById(id) {
   showMessageBlock(blockElement);
 
   const escListener = getEscListener();
-  window.addEventListener('keydown', escListener);
+  window.addEventListener(Constants.KEYDOWN_EVENT, escListener);
   const anyClickListenter = getAnyClickListener();
-  window.addEventListener('click', anyClickListenter);
+  window.addEventListener(Constants.CLICK_EVENT, anyClickListenter);
 
   function getEscListener() {
     return (evt) => {
-      if (evt.key === 'Escape') {
-        hideMessageBlock(blockElement);
-        removeListeners(escListener, anyClickListenter);
+      if (isEscapePressed(evt)) {
+        hideAndRemoveListeners(blockElement, escListener, anyClickListenter);
       }
     };
   }
 
   function getAnyClickListener() {
     return () => {
-      hideMessageBlock(blockElement);
-      removeListeners(escListener, anyClickListenter);
+      hideAndRemoveListeners(blockElement, escListener, anyClickListenter);
     };
   }
+}
+
+function hideAndRemoveListeners(blockElement, escListener, anyClickListenter) {
+  hideMessageBlock(blockElement);
+  removeListeners(escListener, anyClickListenter);
 }
 
 function removeListeners(escListener, anyClickListenter) {
@@ -88,11 +91,11 @@ function removeListeners(escListener, anyClickListenter) {
 }
 
 function showMessageBlock(blockElement) {
-  blockElement.classList.remove(constants.HIDDEN_CLASS);
+  blockElement.classList.remove(Constants.HIDDEN_CLASS);
 }
 
 function hideMessageBlock(blockElement) {
-  blockElement.classList.add(constants.HIDDEN_CLASS);
+  blockElement.classList.add(Constants.HIDDEN_CLASS);
 }
 
 export { initFormSubmit, initFormReset };

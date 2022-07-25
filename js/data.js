@@ -1,5 +1,8 @@
+import { Constants } from './constants.js';
+
 async function getHostingsAsnc() {
-  const response = await fetch('https://26.javascript.pages.academy/keksobooking/data');
+  const response = await fetch(`${Constants.KEKSOBOOKING_ENDPOINT}/data`);
+
   if (!response.ok) {
     throw new Error(`${response.status} - ${response.statusText}`);
   }
@@ -7,7 +10,7 @@ async function getHostingsAsnc() {
 }
 
 async function sendFormAsync(formData) {
-  const response = await fetch('https://26.javascript.pages.academy/keksobooking', {
+  const response = await fetch(Constants.KEKSOBOOKING_ENDPOINT, {
     method: 'POST',
     body: formData
   });
